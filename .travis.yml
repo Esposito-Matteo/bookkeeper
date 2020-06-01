@@ -10,5 +10,5 @@ addons:
 
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
-  - mvn verify -DfailIfNoTests=false -Dmaven.test.failure.ignore=true org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
-
+  #- mvn verify -DfailIfNoTests=false -Dmaven.test.failure.ignore=true org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+- mvn package -DfailIfNoTests=false -Dmaven.test.failure.ignore=true org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar
