@@ -798,6 +798,7 @@
       </extension>
     </extensions>
     <pluginManagement>
+
       <plugins>
          <plugin>
         <groupId>org.jacoco</groupId>
