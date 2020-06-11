@@ -7,6 +7,6 @@ addons:
     organization: "esposito-matteo190320202155"
     token: 9699af4d6b69ebd243a7d1d0cc0715e60e346a22
 
-script:
-- mvn verify -DfailIfNoTests=false -Dmaven.test.failure.ignore=true sonar:sonar -Dsonar.projectKey=Esposito-Matteo_bookkeeper 
+install:
+- mvn install -Dmaven.javadoc.skip=true -DfailIfNoTests=false -Dmaven.test.failure.ignore=true sonar:sonar -Dsonar.projectKey=Esposito-Matteo_bookkeeper
  
