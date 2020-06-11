@@ -8,5 +8,7 @@ addons:
     token: 9699af4d6b69ebd243a7d1d0cc0715e60e346a22
 
 install:
-- mvn install -Dmaven.javadoc.skip=true -DfailIfNoTests=false -Dmaven.test.failure.ignore=true sonar:sonar -Dsonar.projectKey=Esposito-Matteo_bookkeeper
+- mvn install -Dmaven.javadoc.skip=true -DfailIfNoTests=false -Dmaven.test.failure.ignore=true
  
+#script:
+#  - mvn verify sonar:sonar -Dsonar.projectKey=Esposito-Matteo_bookkeeper -Pcoverage
