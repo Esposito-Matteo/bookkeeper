@@ -8,7 +8,7 @@
     <groupId>org.apache.bookkeeper</groupId>
     <version>4.11.0-SNAPSHOT</version>
   </parent>
-  
+  <name>Apache Bookkeeper :: Tests Coverage Report</name>
   <properties>
   <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
 </properties>
@@ -23,7 +23,7 @@
     </dependency>
   </dependencies>
 
-  <name>Apache Bookkeeper :: Tests Coverage Report</name>
+
 
   <build>
     <plugins>
