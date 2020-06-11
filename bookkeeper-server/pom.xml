@@ -25,6 +25,7 @@
   <artifactId>bookkeeper-server</artifactId>
   <name>Apache BookKeeper :: Server</name>
   <properties>
+    <destFile>{basedir}/target/jacoco.exec</destFile>
     <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
   <dependencies>
@@ -176,6 +177,13 @@
   </dependencies>
   <build>
     <plugins>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.5</version>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
