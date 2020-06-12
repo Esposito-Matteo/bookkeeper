@@ -202,13 +202,12 @@
     <protobuf-maven-plugin.version>0.5.0</protobuf-maven-plugin.version>
     <puppycrawl.checkstyle.version>6.19</puppycrawl.checkstyle.version>
     <spotbugs-maven-plugin.version>3.1.8</spotbugs-maven-plugin.version>
-    <forkCount.variable>1</forkCount.variable>
+    <forkCount.variable>3</forkCount.variable>
   </properties>
 
   <!-- dependency definitions -->
   <dependencyManagement>
     <dependencies>
-
 
       <!-- provided dependencies -->
       <dependency>
@@ -913,11 +912,12 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
-          <argLine> -Dfile.encoding=${project.build.sourceEncoding} ${argLine} -Xmx2G -Djava.net.preferIPv4Stack=true -Dio.netty.leakDetection.level=paranoid</argLine>
+          <argLine>
+            -Xmx1024m -XX:MaxPermSize=512m -javaagent:${basedir}/../ba-dua-lib/ba-dua-agent-rt-0.4.1-SNAPSHOT-all.jar  -Xbootclasspath/p:${basedir}/ba-dua-lib/ba-dua-agent-rt-0.4.1-SNAPSHOT-all.jar -Dfile.encoding=${project.build.sourceEncoding} ${argLine} -Xmx2G -Djava.net.preferIPv4Stack=true -Dio.netty.leakDetection.level=paranoid</argLine>
           <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
           <forkCount>${forkCount.variable}</forkCount>
-          <reuseForks>false</reuseForks>
-          <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
+          <reuseForks>true</reuseForks>
+         <!-- <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds> -->
           <rerunFailingTestsCount>${testRetryCount}</rerunFailingTestsCount>
         </configuration>
       </plugin>
@@ -1062,10 +1062,28 @@
     <profile>
       <id>coverage</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <activeByDefault>false</activeByDefault>
       </activation>
       <build>
         <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${maven-surefire-plugin.version}</version>
+            <configuration>
+              <argLine>
+                ${argLine}
+                -Xmx2G -Djava.net.preferIPv4Stack=true
+                -Dio.netty.leakDetection.level=paranoid
+              </argLine>
+              <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
+              <forkCount>${forkCount.variable}</forkCount>
+              <reuseForks>true</reuseForks>
+              <!-- <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds> -->
+              <rerunFailingTestsCount>${testRetryCount}</rerunFailingTestsCount>
+            </configuration>
+          </plugin>
+
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
@@ -1077,6 +1095,32 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>baduaProfile</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${maven-surefire-plugin.version}</version>
+            <configuration>
+              <argLine>
+                -Xmx1024m -XX:MaxPermSize=512m -javaagent:${basedir}/../ba-dua-lib/ba-dua-agent-rt-0.4.1-SNAPSHOT-all.jar
+                -Xbootclasspath/p:${basedir}/ba-dua-lib/ba-dua-agent-rt-0.4.1-SNAPSHOT-all.jar -Dfile.encoding=${project.build.sourceEncoding} </argLine>
+              <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
+              <forkCount>${forkCount.variable}</forkCount>
+              <reuseForks>true</reuseForks>
+              <!-- <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds> -->
+              <rerunFailingTestsCount>${testRetryCount}</rerunFailingTestsCount>
+            </configuration>
           </plugin>
         </plugins>
       </build>

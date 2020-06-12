@@ -8,4 +8,4 @@ addons:
     token: 9699af4d6b69ebd243a7d1d0cc0715e60e346a22
 
 install: mvn clean install -q -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2"
-script: mvn verify sonar:sonar -Dsonar.projectKey=Esposito-Matteo_bookkeeper -Pcoverage
+script: mvn verify sonar:sonar -Dsonar.projectKey=Esposito-Matteo_bookkeeper -Pcoverage  -Dmaven.javadoc.skip=true

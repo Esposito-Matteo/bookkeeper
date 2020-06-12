@@ -29,6 +29,15 @@
     <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
   <dependencies>
+
+    <!-- PIT -->
+    <dependency>
+      <groupId>org.pitest</groupId>
+      <artifactId>pitest-maven</artifactId>
+      <version>1.5.1</version>
+      <type>maven-plugin</type>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.bookkeeper</groupId>
       <artifactId>bookkeeper-common</artifactId>
@@ -266,55 +275,45 @@
   </build>
   <profiles>
     <profile>
-      <id>vertx-http-server</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.apache.bookkeeper.http</groupId>
-          <artifactId>vertx-http-server</artifactId>
-          <version>${project.parent.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>tls-certs</id>
+      <id>pitProfile</id>
       <build>
         <plugins>
+          <!--Pit-->
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>1.6.0</version>
-            <executions>
-              <execution>
-                <id>Generate Self-Signed Certificates</id>
-                <phase>generate-test-resources</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <workingDirectory>${basedir}/src/test/resources</workingDirectory>
-                  <executable>${basedir}/src/test/resources/generateKeysAndCerts.sh</executable>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <!-- test profiles -->
-    <profile>
-      <id>skipBookKeeperServerTests</id>
-      <activation>
-        <property>
-          <name>skipBookKeeperServerTests</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.5.1</version>
             <configuration>
-              <skipTests>true</skipTests>
+              <maxMutationsPerClass>50</maxMutationsPerClass>
+              <targetClasses>
+                <param>org.apache.bookkeeper.bookie.Bookie</param>
+                <param>org.apache.bookkeeper.bookie.EntryLogger</param>
+              </targetClasses>
+              <targetTests>
+                <param>
+                  org.apache.bookkeeper.bookieClassTests.tests.FenceLedgerTest
+                </param>
+                <param>
+                  org.apache.bookkeeper.bookieClassTests.tests.ReadEntryTest
+                </param>
+                <param>
+                  org.apache.bookkeeper.bookieClassTests.tests.MountLedgerStorageOfflineTest
+                </param>
+                <param>
+                  org.apache.bookkeeper.bookie.AddEntryForCompactionTest
+                </param>
+                <param>
+                  org.apache.bookkeeper.bookie.InternalReadEntryTest
+                </param>
+              </targetTests>
+
+              <avoidCallsTo>
+                <avoidCallsTo>java.util.logging</avoidCallsTo>
+                <avoidCallsTo>org.apache.log4j</avoidCallsTo>
+                <avoidCallsTo>org.slf4j</avoidCallsTo>
+                <avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
+              </avoidCallsTo>
+
             </configuration>
           </plugin>
         </plugins>

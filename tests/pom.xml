@@ -24,7 +24,9 @@
   </dependencies>
 
 
-
+<profiles>
+  <profile>
+    <id>coverage</id>
   <build>
     <plugins>
       <plugin>
@@ -42,5 +44,6 @@
       </plugin>
     </plugins>
   </build>
-
+  </profile>
+</profiles>
 </project>
