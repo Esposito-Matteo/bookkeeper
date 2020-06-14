@@ -2,6 +2,7 @@ package org.apache.bookkeeper.bookieClassTests.tests;
 
 import io.netty.buffer.Unpooled;
 import org.apache.bookkeeper.bookieClassTests.Utils.BookKeeperClusterTestCase;
+import org.apache.bookkeeper.bookieClassTests.Utils.TestStatsProvider;
 import org.apache.bookkeeper.bookieClassTests.entity.ReadEntryAux;
 import io.netty.buffer.ByteBuf;
 import org.apache.bookkeeper.bookie.Bookie;
@@ -14,14 +15,20 @@ import org.apache.bookkeeper.proto.BookkeeperInternalCallbacks;
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.junit.runners.Parameterized;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(value = Parameterized.class)
 public class ReadEntryTest extends BookKeeperClusterTestCase {
@@ -44,7 +51,6 @@ public class ReadEntryTest extends BookKeeperClusterTestCase {
                 new ReadEntryAux(1L, 0L, false),
                 new ReadEntryAux(1234L, 1L, true));
     }
-
     @Before
     public void setUp() throws Exception {
         super.setUp();
@@ -77,7 +83,9 @@ public class ReadEntryTest extends BookKeeperClusterTestCase {
 
     @After
     public void tearDown() throws IOException {
-        FileUtils.deleteDirectory(new File("/tmp/bk-data/"));
+        File tempFile = new File("/tmp/bk-data/");
+        boolean exists = tempFile.exists();
+        if(exists)FileUtils.deleteDirectory(new File("/tmp/bk-data/"));
     }
 
     @Test

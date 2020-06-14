@@ -33,6 +33,7 @@ public class InternalReadEntryTest extends BookKeeperClusterTestCase {
         testEntity = inTestEntity;
     }
 
+    private static Long testLong=312313L;
     @Parameterized.Parameters
     public static Collection<?> getParameters() {
 
@@ -41,7 +42,11 @@ public class InternalReadEntryTest extends BookKeeperClusterTestCase {
                 new InternalReadEntryAux(-1L, -1L, -1L, true, false),
                 new InternalReadEntryAux(0L, 1L, 0L, false, false),
                 new InternalReadEntryAux(1L, 0L, 1L, false, false),
-                new InternalReadEntryAux(1234L, 1L, 0L, false, true));
+                new InternalReadEntryAux(1234L, 1L, 0L, true, true),
+                new InternalReadEntryAux(1234L, 1L, 0L, false, true),// validateEntry:false->true for Jacoco branch coverage
+                new InternalReadEntryAux(1234L, 1L, 43L, false, false) // Added for Jacoco statement coverage
+                );
+
     }
 
     @Before
@@ -64,8 +69,12 @@ public class InternalReadEntryTest extends BookKeeperClusterTestCase {
 
             location = entryLogger.addEntry(ledgerHandle.getId(), newEntry3, true);
             testEntity.setLedgerID(ledgerHandle.getId());
-            testEntity.setLocation(location);
+            if(testEntity.getLocation()!=43L) {
+                testEntity.setLocation(location);
+            }
         }
+
+
     }
 
     @After
@@ -85,6 +94,7 @@ public class InternalReadEntryTest extends BookKeeperClusterTestCase {
             ledgerHandle.close();
             Assert.assertEquals(testEntity.getExpected(), (testString.contains(new String("matteo"))));
         } catch (NullPointerException | IOException | IllegalArgumentException e) {
+            e.printStackTrace();
             Assert.assertEquals(testEntity.getExpected(), false);
 
 

@@ -1,5 +1,6 @@
 package org.apache.bookkeeper.bookieClassTests.tests;
 
+import io.netty.buffer.Unpooled;
 import org.apache.bookkeeper.bookieClassTests.Utils.BookKeeperClusterTestCase;
 import org.apache.bookkeeper.bookieClassTests.entity.MountLedgerStorageOfflineAux;
 import io.netty.buffer.ByteBufAllocator;
@@ -39,11 +40,12 @@ public class MountLedgerStorageOfflineTest extends BookKeeperClusterTestCase {
     public static Collection<MountLedgerStorageOfflineAux> getParameters() {
         return Arrays.asList(
                                                     // null, null,false
-                new MountLedgerStorageOfflineAux(false, false, false),
+                new MountLedgerStorageOfflineAux(false, false, false,false),
                                                  // valid  , null ,true
-                new MountLedgerStorageOfflineAux(true, false, true),
+                new MountLedgerStorageOfflineAux(true, false, true,false),
                                                 // valid, valid, true
-                new MountLedgerStorageOfflineAux(true, true, true)
+                new MountLedgerStorageOfflineAux(true, true, true,false),
+                new MountLedgerStorageOfflineAux(true, false, true,true)  // Aggiunto per Jacoco ( branch coverage )
                 // new mountLedgerStorageOfflineAux(new ServerConfiguration(), null, true)r
 
         );
@@ -73,17 +75,25 @@ public class MountLedgerStorageOfflineTest extends BookKeeperClusterTestCase {
         LedgerStorage res;
         ServerConfiguration conf = bsConfs.get(0);
         try {
-            if (testEntity.getLedgerStorage()) {
+            if(testEntity.getJacoco()){
+                res = Bookie.mountLedgerStorageOffline(conf, null);
+            }else {
+                if (testEntity.getLedgerStorage()) {
 
-                res = Bookie.mountLedgerStorageOffline(conf, ledgerStorage);
-            } else {
-                if(!testEntity.getConf()){
-                    res = Bookie.mountLedgerStorageOffline(null, ledgerStorage);
-                }else {
                     res = Bookie.mountLedgerStorageOffline(conf, ledgerStorage);
+                } else {
+                    if (!testEntity.getConf()) {
+                        res = Bookie.mountLedgerStorageOffline(null, ledgerStorage);
+                    } else {
+                        res = Bookie.mountLedgerStorageOffline(conf, ledgerStorage);
+                    }
                 }
             }
+            if(res!=null) { // switch over res for PIT Mutation Testing
                 result = true;
+            }else{
+                result =false;
+            }
         } catch (NullPointerException | IOException e) {
             e.printStackTrace();
             result = false;

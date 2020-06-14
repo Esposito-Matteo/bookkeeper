@@ -1077,7 +1077,7 @@
                 -Dio.netty.leakDetection.level=paranoid
               </argLine>
               <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
-              <forkCount>${forkCount.variable}</forkCount>
+              <forkCount>1</forkCount>
               <reuseForks>true</reuseForks>
               <!-- <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds> -->
               <rerunFailingTestsCount>${testRetryCount}</rerunFailingTestsCount>
@@ -1116,7 +1116,7 @@
                 -Xmx1024m -XX:MaxPermSize=512m -javaagent:${basedir}/../ba-dua-lib/ba-dua-agent-rt-0.4.1-SNAPSHOT-all.jar
                 -Xbootclasspath/p:${basedir}/ba-dua-lib/ba-dua-agent-rt-0.4.1-SNAPSHOT-all.jar -Dfile.encoding=${project.build.sourceEncoding} </argLine>
               <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
-              <forkCount>${forkCount.variable}</forkCount>
+              <forkCount>1</forkCount>
               <reuseForks>true</reuseForks>
               <!-- <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds> -->
               <rerunFailingTestsCount>${testRetryCount}</rerunFailingTestsCount>

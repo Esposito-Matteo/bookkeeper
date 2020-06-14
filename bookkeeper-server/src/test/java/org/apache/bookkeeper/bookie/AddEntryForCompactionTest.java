@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import org.apache.bookkeeper.bookieClassTests.Utils.BookKeeperClusterTestCase;
 import org.apache.bookkeeper.client.BookKeeper;
 import org.apache.bookkeeper.client.LedgerHandle;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
@@ -47,9 +48,12 @@ public class AddEntryForCompactionTest extends BookKeeperClusterTestCase {
                         new ImmutableTriple<>(false,-1L,"".getBytes()),   // not valid,
                                                                                    // throws exception
                                                                                    // java.lang.IllegalArgumentException
-                        new ImmutableTriple<>(false,1L,null));  // "valid" ( long > 0 )  ledgerID
-                                                                               //  but null byte content and notFound
-                                                                               // ledgerID
+                        new ImmutableTriple<>(false,1L,null),    // "valid" ( long > 0 )  ledgerID
+                                                                                //  but null byte content and notFound
+                                                                                // ledgerID
+                        new ImmutableTriple<>(true,12345L,"content".getBytes())   // Added for Jacoco Branch Coverage
+                        );
+
         }
 
 
@@ -68,12 +72,19 @@ public class AddEntryForCompactionTest extends BookKeeperClusterTestCase {
 
     @After
     public void tearDown() {
-            File test = new File("/tmp/bk-data/current");
-            test.delete();
+        File tempFile = new File("/tmp/bk-data/current");
+        boolean exists = tempFile.exists();
+        if(exists) {
+            try {
+                FileUtils.deleteDirectory(new File("/tmp/bk-data/current"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Test
-    public void testMethod() {
+    public void testMethod() throws IOException {
 
             ByteBuf newEntry3 = null;
             if(triple.getRight()!=null) {
@@ -81,9 +92,12 @@ public class AddEntryForCompactionTest extends BookKeeperClusterTestCase {
                     newEntry3.writeLong(ledgerHandle.getId()); // ledger id
                     newEntry3.writeLong(1); // entry id
                     newEntry3.writeBytes(triple.getRight());
+                    if(triple.getMiddle()==12345L){
+                       entryLogger.createNewCompactionLog();       // Added for Jacoco Branch Coverage
+                    }
             }
             try {
-                if(triple.getMiddle()==1234){
+                if(triple.getMiddle()==1234L||triple.getMiddle()==12345L){
                     location = entryLogger.addEntryForCompaction(ledgerHandle.getId(), newEntry3);
                 }else{
                     location = entryLogger.addEntryForCompaction(triple.getMiddle(), newEntry3);

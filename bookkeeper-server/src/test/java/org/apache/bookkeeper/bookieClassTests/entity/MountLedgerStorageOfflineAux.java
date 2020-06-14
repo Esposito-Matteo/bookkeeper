@@ -8,6 +8,15 @@ public class MountLedgerStorageOfflineAux {
     private Boolean conf;
     private Boolean ledgerStorage;
     private Boolean expectedValue;
+    private Boolean jacoco;
+
+    public Boolean getJacoco() {
+        return jacoco;
+    }
+
+    public void setJacoco(Boolean jacoco) {
+        this.jacoco = jacoco;
+    }
 
     public Boolean getConf() {
         return conf;
@@ -33,10 +42,11 @@ public class MountLedgerStorageOfflineAux {
         this.ledgerStorage = ledgerStorage;
     }
 
-    public MountLedgerStorageOfflineAux(Boolean conf, Boolean ledgerStorage, Boolean expectedValue) {
+    public MountLedgerStorageOfflineAux(Boolean conf, Boolean ledgerStorage, Boolean expectedValue, Boolean jacoco) {
         this.conf = conf;
         this.ledgerStorage = ledgerStorage;
         this.expectedValue = expectedValue;
+        this.jacoco = jacoco;
     }
 
 
